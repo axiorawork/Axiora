@@ -1,0 +1,36 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #03045e;
+  --color-brand-secondary: #0077b6;
+  --color-brand-accent: #00b4d8;
+  --color-brand-light: #90e0ef;
+  --color-brand-bg: #caf0f8;
+
+  --color-glow-dark-1: #020204;
+  --color-glow-dark-2: #05010a;
+  --color-glow-dark-3: #0a0613;
+
+  --color-glow-purple-1: #d946ef;
+  --color-glow-purple-2: #c026d3;
+  --color-glow-purple-3: #a855f7;
+}
+
+@layer base {
+  :root {
+    --background: #020204;
+    --foreground: #ffffff;
+  }
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-geist-sans), sans-serif;
+  overflow-x: hidden;
+}
+
+/* Hide spline viewer watermark */
+spline-viewer::part(logo) {
+  display: none !important;
+}
