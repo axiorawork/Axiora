@@ -10,6 +10,28 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }, { passive: true });
 
+  // 1.1 Mobile Menu Toggle
+  const mobileToggle = document.querySelector('.mobile-menu-toggle');
+  const navLinksContainer = document.querySelector('.nav-links');
+  
+  if (mobileToggle && navLinksContainer) {
+    mobileToggle.addEventListener('click', () => {
+      mobileToggle.classList.toggle('active');
+      navLinksContainer.classList.toggle('active');
+      document.body.style.overflow = navLinksContainer.classList.contains('active') ? 'hidden' : '';
+    });
+
+    // Close menu when a link is clicked
+    const links = navLinksContainer.querySelectorAll('a');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        mobileToggle.classList.remove('active');
+        navLinksContainer.classList.remove('active');
+        document.body.style.overflow = '';
+      });
+    });
+  }
+
   // 1.5 Scroll Spy Navigation
   const sections = document.querySelectorAll('section');
   const navLinks = document.querySelectorAll('.nav-links a');
@@ -275,55 +297,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // 13. Business Growth Engine (BGE) Animation
-  const bgeTags = document.querySelectorAll('.bge-tag');
-  if (bgeTags.length > 0) {
-    let currentTagIndex = 0;
-    setInterval(() => {
-      bgeTags.forEach((tag, index) => {
-        tag.classList.remove('active', 'prev');
-        if (index === currentTagIndex) {
-          tag.classList.add('prev');
-        }
-      });
-      
-      currentTagIndex = (currentTagIndex + 1) % bgeTags.length;
-      bgeTags[currentTagIndex].classList.add('active');
-    }, 2500);
-
-    // Advanced Count Up for BGE
-    const countUpElements = document.querySelectorAll('.count-up');
-    const bgeObserver = new IntersectionObserver((entries, observer) => {
+  // 13. Project Workflow Animation
+  const workflowTimeline = document.querySelector('.workflow-timeline');
+  const workflowSteps = document.querySelectorAll('.workflow-step');
+  
+  if (workflowTimeline && workflowSteps.length > 0) {
+    const workflowObserver = new IntersectionObserver((entries, observer) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          countUpElements.forEach(counter => {
-            if (counter.classList.contains('counted')) return;
-            counter.classList.add('counted');
-            
-            const target = +counter.getAttribute('data-target');
-            let current = 0;
-            const increment = target / 60; // 60fps for ~1 second
-            
-            const updateCounter = () => {
-              current += increment;
-              if (current < target) {
-                counter.innerText = Math.ceil(current).toLocaleString();
-                requestAnimationFrame(updateCounter);
-              } else {
-                counter.innerText = target.toLocaleString();
-              }
-            };
-            updateCounter();
+          // Sequentially animate steps
+          workflowSteps.forEach((step, index) => {
+            setTimeout(() => {
+              step.classList.add('active');
+            }, index * 300); // 300ms delay between each
           });
           observer.unobserve(entry.target);
         }
       });
     }, { threshold: 0.5 });
     
-    const bgeFlow = document.querySelector('.bge-flow');
-    if (bgeFlow) {
-      bgeObserver.observe(bgeFlow);
-    }
+    workflowObserver.observe(workflowTimeline);
+  }
+
+  // 14. Parallax Effect for Tags
+  const workflowContainer = document.querySelector('.hero-workflow-engine');
+  const tagsContainer = document.querySelector('.workflow-tags-container');
+  
+  if (workflowContainer && tagsContainer) {
+    workflowContainer.addEventListener('mousemove', (e) => {
+      const rect = workflowContainer.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      
+      tagsContainer.style.transform = `translate(${-x * 0.05}px, ${-y * 0.05}px)`;
+    });
+    
+    workflowContainer.addEventListener('mouseleave', () => {
+      tagsContainer.style.transform = `translate(0px, 0px)`;
+      tagsContainer.style.transition = `transform 0.5s ease`;
+    });
+    
+    workflowContainer.addEventListener('mouseenter', () => {
+      tagsContainer.style.transition = `none`;
+    });
   }
 
 });
